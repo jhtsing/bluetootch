@@ -175,23 +175,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\acceptor.cc"
-				>
-			</File>
-			<File
-				RelativePath=".\channel.cc"
-				>
-			</File>
-			<File
 				RelativePath=".\pccontrol.cc"
-				>
-			</File>
-			<File
-				RelativePath=".\session.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\socket_accptor.cc"
 				>
 			</File>
 		</Filter>
@@ -201,31 +185,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\acceptor.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\channel.hpp"
-				>
-			</File>
-			<File
 				RelativePath=".\command_utils.h"
 				>
 			</File>
 			<File
-				RelativePath=".\io_service_thread.h"
-				>
-			</File>
-			<File
 				RelativePath=".\message.hpp"
-				>
-			</File>
-			<File
-				RelativePath=".\session.h"
-				>
-			</File>
-			<File
-				RelativePath=".\socket_accptor.h"
 				>
 			</File>
 		</Filter>
@@ -234,6 +198,46 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+		</Filter>
+		<Filter
+			Name="network"
+			>
+			<File
+				RelativePath=".\acceptor.cc"
+				>
+			</File>
+			<File
+				RelativePath=".\acceptor.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\channel.cc"
+				>
+			</File>
+			<File
+				RelativePath=".\channel.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\io_service_thread.h"
+				>
+			</File>
+			<File
+				RelativePath=".\session.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\session.h"
+				>
+			</File>
+			<File
+				RelativePath=".\socket_accptor.cc"
+				>
+			</File>
+			<File
+				RelativePath=".\socket_accptor.h"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

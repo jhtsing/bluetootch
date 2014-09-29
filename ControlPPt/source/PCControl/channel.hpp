@@ -28,7 +28,6 @@ private:
 	void handle_wirte(write_handler_type handler ,boost::system::error_code ec , size_t len);
 	boost::asio::io_service& io_service_;
 	boost::asio::ip::tcp::socket socket_;
-	
 }; 
 
 #endif 

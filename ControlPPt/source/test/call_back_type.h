@@ -1,6 +1,7 @@
 #ifndef __ASYNC_CALL_BACK_H__
 #define __ASYNC_CALL_BACK_H__
 #include <Windows.h>
+#include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/system/error_code.hpp>
 #include "basic.hpp"
@@ -42,5 +43,6 @@ namespace bluetooch
 		async_callback_base_ptr p(static_cast<async_callback_base_t *>(overlapped));
 		p->invoke(error, size);
 	} 
+	typedef boost::shared_ptr<async_callback_base_t> async_callback_ptr;
 }
 #endif

@@ -1,8 +1,11 @@
 #include "StdAfx.h"
 #include <vector>
+#include <Windows.h>
 #include <boost/thread.hpp>
 #include "dispatchor.hpp"
-
+#include "iocp.hpp"
+#include "call_back_type.h"
+#include <boost/foreach.hpp>
 
 namespace bluetooch
 {
@@ -25,18 +28,19 @@ namespace bluetooch
 		}
 	}
 	// 向完成端口投递请求
-	template<typename HandlerT, typename AllocatorT = std::allocator<char> >
-	void dispatchor::post(HandlerT &&, const AllocatorT &allocator = AllocatorT())
+	template<typename HandlerT>
+	void dispatchor::post(HandlerT& handle)
 	{
 		if (impl_)
 		{
-			impl_->
+			async_callback_ptr async_callback(new win_async_callback_t);
+			impl_->post_impl();
 		}
 	}
 	class dispatchor::impl
 	{
 	public:
-		 impl(int num_thread):
+		 impl(int num_thread)
 		 {
 			if (!iocp_.create(num_thread))
 			{
@@ -45,7 +49,7 @@ namespace bluetooch
 			thread_pool_.reserve(num_thread);
 		    for (int i = 0 ; i < num_thread ; i++)
 			{
-				thread_pool_.push_back(boost::move(boost::bind(&impl::run ,this)));
+				thread_pool_.push_back(boost::move(boost::thread(boost::bind(&impl::run ,this))));
 			}
 		 }
 		 void bind(HANDLE handle)
@@ -58,17 +62,23 @@ namespace bluetooch
 		 void stop()
 		 {
 			 // 先停止所有的线程
-			 BOOST_FOREACH(boost::thread& t ,threads_)
+			 BOOST_FOREACH(boost::thread& t, thread_pool_)
 			 {
 				 ::QueueUserAPC(ApcQueue, t.native_handle(), 0); 
 			 }
-			 BOOST_FOREACH(boost::thread&t , threads_)
+			 BOOST_FOREACH(boost::thread&t, thread_pool_)
 			 {
 				 t.join();
 			 }
 			 thread_pool_.clear(); 
 		 }
-		 void post();
+		 bool post_impl(const async_callback_ptr &val)
+		 {
+			 if (!iocp_.post_status(0, 0, static_cast<OVERLAPPED *>(val.get())))
+				 throw ("iocp_.PostStatus");
+
+			 return true;
+		 }
 	private:
 		void run()
 		{

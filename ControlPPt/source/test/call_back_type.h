@@ -37,12 +37,16 @@ namespace bluetooch
 			handler_(error, size);
 		}
 	}; 
-	template <typename OverlappedT>
-	void callback(OverlappedT *overlapped, int32 size, const boost::system::error_code &error)
+	template <typename HandlerT>
+	boost::shared_ptr<async_callback_base_t> make_callback(HandlerT& h)
 	{
-		async_callback_base_ptr p(static_cast<async_callback_base_t *>(overlapped));
+		boost::shared_ptr<async_callback_base_t<HandlerT>> h_= new win_async_callback_t(h);
+		return h_;
+	} 
+	inline void callback_t(OVERLAPPED *overlapped, int32 size, const boost::system::error_code &error)
+	{
+		async_callback_base_t* p(static_cast<async_callback_base_t *>(overlapped));
 		p->invoke(error, size);
 	} 
-	typedef boost::shared_ptr<async_callback_base_t> async_callback_ptr;
 }
 #endif

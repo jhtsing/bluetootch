@@ -1,6 +1,6 @@
 #ifndef __DISPATCH_H__
 #define __DISPATCH_H__
-#include <boost/interprocess/smart_ptr/unique_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 namespace bluetooch
 {
 	class dispatchor
@@ -11,12 +11,12 @@ namespace bluetooch
 		void bind(void *);
 		// 向完成端口投递请求
 		template<typename HandlerT>
-		void dispatchor::post(HandlerT& handle);
+		void post(HandlerT& handle);
 		// 停止服务
 		void stop();	     
 	private:
 		struct impl;
-		boost::unique_ptr<impl> impl_;
+		boost::scoped_ptr<impl> impl_;
 	}; 
 }
 #endif

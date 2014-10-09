@@ -2,8 +2,6 @@
 
 namespace bluetooch
 {
-
-	  
 	socket_handle::socket_handle():
 	socket_(INVALID_SOCKET)
 	{

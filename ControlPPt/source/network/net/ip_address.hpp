@@ -25,8 +25,18 @@ namespace bluetooch
 			return (rs.address()!= addr_);
 		}
 	private:
-
-
+		static std::string address_to_string(const ip_address& addr)
+		{
+			in_addr _addr;
+			_addr.s_addr = addr.address();
+			char * p = ::inet_ntoa(tmp);
+			return p;
+		}
+		static ip_address string_to_address(const std::string& addr)
+		{
+			int32 _addr = ::htonl(::inet_addr(addr.c_str()));
+			return ip_address(_addr);
+		}
 		int32 addr_;
 	};
 }

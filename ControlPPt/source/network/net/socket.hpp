@@ -4,14 +4,20 @@
 
 namespace bluetooch
 {
-	class nocopy
+	class socket_handle
 	{
-	protected:
-		nocopy(){}
-		~nocopy(){}
+	public:
+		socket_handle(){}
+		~socket_handle(){}
+		bool is_open();
+		bool open(int family ,int nType,int nProtocol);
+		bool bind(int family ,const ip_address& addr , size_t port);
+		bool listen(int max);
+		void connect(int family, const ip_address& addr , size_t port);
+		void disconnect(int shut_type, bool is_reuse);
+		void close();
 	private:
-		nocopy(const nocopy&);
-		nocopy& operator=(const nocopy&);
+		SOCKET socket_;
 	};
 }
 #endif

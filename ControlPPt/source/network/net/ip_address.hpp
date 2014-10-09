@@ -4,14 +4,30 @@
 
 namespace bluetooch
 {
-	class nocopy
+	typedef boost::int32_t int32;
+	class ip_address
 	{
-	protected:
-		nocopy(){}
-		~nocopy(){}
+	 public:
+		 ip_address(const int32& addr):
+		   addr_(addr)
+		{}
+		~ip_address(){}
+		int32 address()
+		{
+			return addr_;
+		}
+		bool operator==(const ip_address& rs)
+		{
+			return (rs.address()==addr_);
+		}
+		bool operator!=(const ip_address& rs)
+		{
+			return (rs.address()!= addr_);
+		}
 	private:
-		nocopy(const nocopy&);
-		nocopy& operator=(const nocopy&);
+
+
+		int32 addr_;
 	};
 }
 #endif

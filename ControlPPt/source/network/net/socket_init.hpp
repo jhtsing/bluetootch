@@ -4,14 +4,28 @@
 
 namespace bluetooch
 {
-	class nocopy
+	template <int major,int minor>
+	class socket_init
 	{
-	protected:
-		nocopy(){}
-		~nocopy(){}
+	public:
+		socket_init()
+		{
+			WSADATA wsa;
+			result_ = ::WSASocket(MAKEWORD(major ,minor) , &wsa);
+		}
+		~socket_init()
+		{
+			::WSACleanup();
+		}
+		static socket_init& instance()
+		{
+			return instance_;
+		}
 	private:
-		nocopy(const nocopy&);
-		nocopy& operator=(const nocopy&);
+		int result_;
+		static socket_init instance_;
 	};
+	template <int major , int minor>
+	socket_init<major , minor>& socket_init<major , minor>::instance_;
 }
 #endif

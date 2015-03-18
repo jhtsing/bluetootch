@@ -77,7 +77,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="async_callback.h" />
     <ClInclude Include="iocp.h" />
+    <ClInclude Include="iocp_impl.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="iocp_impl.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

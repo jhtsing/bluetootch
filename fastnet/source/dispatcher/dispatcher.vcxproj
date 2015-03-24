@@ -94,6 +94,7 @@
     <ClInclude Include="..\..\include\iocp_impl.h" />
     <ClInclude Include="..\..\include\nocopyable.h" />
     <ClInclude Include="socket_function.h" />
+    <ClInclude Include="socket_init.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

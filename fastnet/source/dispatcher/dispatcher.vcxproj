@@ -87,14 +87,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="iocp_impl.cc" />
+    <ClCompile Include="socket_function.cc" />
+    <ClCompile Include="socket_handle_t.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\async_callback.h" />
     <ClInclude Include="..\..\include\iocp.h" />
     <ClInclude Include="..\..\include\iocp_impl.h" />
     <ClInclude Include="..\..\include\nocopyable.h" />
+    <ClInclude Include="ip_address.h" />
     <ClInclude Include="socket_function.h" />
+    <ClInclude Include="socket_handle_t.h" />
     <ClInclude Include="socket_init.h" />
+    <ClInclude Include="socket_type.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

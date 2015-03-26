@@ -86,6 +86,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="acceptor.cc" />
     <ClCompile Include="iocp_impl.cc" />
     <ClCompile Include="socket_function.cc" />
     <ClCompile Include="socket_handle_t.cc" />
@@ -95,6 +96,7 @@
     <ClInclude Include="..\..\include\iocp.h" />
     <ClInclude Include="..\..\include\iocp_impl.h" />
     <ClInclude Include="..\..\include\nocopyable.h" />
+    <ClInclude Include="acceptor.h" />
     <ClInclude Include="ip_address.h" />
     <ClInclude Include="socket_function.h" />
     <ClInclude Include="socket_handle_t.h" />

@@ -12,7 +12,7 @@ namespace network
 	class socket_handle_t
 	{
 	public:
-		typedef SOCKET socket_native_type;
+	
 		socket_handle_t(service::iocp_impl& iocp_service);
 		socket_handle_t(service::iocp_impl& iocp_service,socket_native_type sock);
 		socket_handle_t(const socket_handle_t &rhs); 
@@ -49,12 +49,6 @@ namespace network
 		// bind
 		void bind(int family, const ip_address &addr, std::uint16_t port);
 		// listen
-		socket_handle_ptr accept()
-		{
-			return nullptr;
-		}
-		
-
 	public:
 		SOCKET sock_;
 		service::iocp_impl& iocp_service_;

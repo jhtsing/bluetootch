@@ -64,7 +64,7 @@ namespace service
 	}
 	void iocp_impl::post(HandlerType handler)
 	{
-		async_callback_base_ptr ptr = make_callback_base_ptr(handler);
+		async_callback_base_ptr ptr(make_callback_ptr(handler));
 		iocp_.post(static_cast<OVERLAPPED *>(ptr.get()));
 		ptr.release();
 	}

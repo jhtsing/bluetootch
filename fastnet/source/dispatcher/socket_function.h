@@ -15,7 +15,7 @@ namespace network
 		// ªÒ»°¿©’πAPI
 		static void get_extension_function(SOCKET &sock, const GUID &guid, LPVOID pFunc);
 		static void cancel_io(SOCKET sock);
-	private:
+	public:
 		LPFN_TRANSMITFILE			TransmitFile;
 		LPFN_ACCEPTEX				AcceptEx;
 		LPFN_GETACCEPTEXSOCKADDRS	GetAcceptExSockaddrs;

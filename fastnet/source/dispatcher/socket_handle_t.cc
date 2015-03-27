@@ -68,15 +68,15 @@ namespace network
 		server_addr.sin_family = family;
 		server_addr.sin_addr.s_addr = ::htonl(addr.address());
 		server_addr.sin_port = ::htons(port);
-		if (SOCKET_ERROR == ::connect(sock_, reinterpret_cast<SOCKADDR *>(&server_addr), sizeof(SOCKADDR_IN)))
+		if (SOCKET_ERROR != ::connect(sock_, reinterpret_cast<SOCKADDR *>(&server_addr), sizeof(SOCKADDR_IN)))
 		{
 			return false;
 		}
 		return true;
 	}
-	void socket_handle_t::disconnect(int shut, bool reuse_socket = true)
+	void socket_handle_t::disconnect(int shut, bool reuse_socket)
 	{
-		if (!is_open)
+		if (!is_open())
 		{
 			return;
 		}
@@ -88,40 +88,133 @@ namespace network
 			set_option(reuse);
 		}
 	}
-	bool socket_handle_t::listen(int max)
+	bool socket_handle_t::async_read(mutable_buffer_t &buffer, read_handler_type handler)
 	{
 		if (!is_open())
 		{
 			return false;
 		}
-		int ret = ::listen(sock_, max);
-		if (ret == SOCKET_ERROR)
+		WSABUF wsabuf = { 0 };
+		wsabuf.buf = buffer.data();
+		wsabuf.len = buffer.size();
+		service::async_callback_base_ptr async_result(service::make_callback_ptr(handler));
+		DWORD dwFlag = 0;
+		DWORD dwSize = 0; 
+		int bret = ::WSARecv(sock_, &wsabuf, 1, &dwSize, &dwFlag, async_result.get(), NULL);
+		if (bret != 0 && WSAGetLastError() != WSA_IO_PENDING)
 		{
 			return false;
+		}
+		else if (bret ==0)
+		{
+			async_result->invoke(std::error_code(), dwSize); 
+		}
+		else
+		{
+			async_result.release();
 		}
 		return true;
 	}
-	// bind
-	void socket_handle_t::bind(int family, const ip_address &addr, std::uint16_t port)
+	bool socket_handle_t::async_write(const const_buffer_t &buf, write_handler_type handler)
 	{
 		if (!is_open())
 		{
-			return;
+			return false;
 		}
-		SOCKADDR_IN local_addr = { 0 };
-		local_addr.sin_family = family;
-		local_addr.sin_addr.s_addr = ::htonl(addr.address());
-		local_addr.sin_port = ::htons(port);
-		int ret = ::bind(sock_, reinterpret_cast<SOCKADDR *>(&local_addr), sizeof(SOCKADDR_IN));
-		assert(ret != SOCKET_ERROR);
+		WSABUF wsabuf = { 0 };
+		wsabuf.buf = const_cast<char *>(buf.data());
+		wsabuf.len = buf.size();
+		DWORD dwflag = 0;
+		DWORD dwsize = 0;
+		service::async_callback_base_ptr async_result(service::make_callback_ptr(handler));
+		int ret = ::WSASend(sock_, &wsabuf, 1, &dwsize, dwflag, async_result.get(), NULL);
+		if ((0 != ret) && WSAGetLastError() == WSA_IO_PENDING)
+		{
+			return false; 
+		}
+		else if (0==ret)
+		{
+			async_result->invoke(std::error_code(), dwsize);
+		}
+		else
+		{
+			async_result.release();
+		}
+		return true;
 	}
-	// accept
+	bool socket_handle_t::async_connect(const end_point& addr, connect_handler_type handler)
+	{
+		if (!is_open())
+		{
+			printf("don't open!\n");
+			return false;
+		}
+		sockaddr_in localAddr = { 0 };
+		localAddr.sin_family = AF_INET;
 
+		// 很变态，需要先bind
+		int ret = ::bind(sock_, reinterpret_cast<const sockaddr *>(&localAddr), sizeof(localAddr));
+		if (ret != 0)
+		{
+			printf("bind failed!\n");
+			return false;
+		}
+		sockaddr_in remoteAddr = { 0 };
+		remoteAddr.sin_family = AF_INET;
+		remoteAddr.sin_port = ::htons(addr.port_);
+		remoteAddr.sin_addr.s_addr = ::htonl(addr.addr_.address());
 
-	bool a
+		service::async_callback_base_ptr async_result
+			(service::make_callback_ptr(std::bind(&socket_handle_t::handle_connect ,
+			shared_from_this(),
+			handler,
+			std::placeholders::_1, 
+			std::placeholders::_2)));
 
-
-
+		if (!socket_function::singleton().ConnectEx(
+			sock_,
+			reinterpret_cast<SOCKADDR *>(&remoteAddr),
+			sizeof(SOCKADDR), 0, 0, 0, async_result.get())
+			&& ::WSAGetLastError() != WSA_IO_PENDING)
+		{
+			printf("connection failed!\n");
+			return false;
+		}
+		async_result.release(); 
+		return true;
+	}
+	void socket_handle_t::handle_connect(connect_handler_type handler,const std::error_code ec, std::uint32_t size)
+	{
+		handler(ec);
+	}
+	bool socket_handle_t::async_disconnect(bool is_reuse, disconnect_handler_type handler)
+	{
+		if (!is_open())
+		{
+			return false;
+		}
+		service::async_callback_base_ptr 
+			async_result(service::make_callback_ptr(
+			std::bind(&socket_handle_t::handle_disconnect,
+			shared_from_this(),
+			handler,
+			std::placeholders::_1,
+			std::placeholders::_2
+			)));
+		DWORD dwFlags = is_reuse ? TF_REUSE_SOCKET : 0;
+		if (!socket_function::singleton().DisconnectEx(sock_, async_result.get(), dwFlags, 0)
+			&& ::WSAGetLastError() != WSA_IO_PENDING)
+		{
+			async_result->invoke(std::make_error_code((std::errc)(::WSAGetLastError())), 0);
+			return false;
+		}
+		async_result.release();
+		return true;
+	}
+	void socket_handle_t::handle_disconnect(connect_handler_type handler, const std::error_code ec, std::uint32_t size)
+	{
+		handler(ec);
+	}
 
 }
 

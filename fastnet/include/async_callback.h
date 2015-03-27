@@ -34,9 +34,9 @@ namespace service
 		}
 	};
 	typedef std::unique_ptr<async_callback_base_t> async_callback_base_ptr;
-	inline async_callback_base_ptr make_callback_base_ptr(HandlerType handler)
+	async_callback_t* make_callback_ptr(HandlerType handler)
 	{
-		async_callback_base_ptr ptr(new async_callback_t(handler));
+		async_callback_t* ptr = new async_callback_t(handler);
 		return ptr;
 	} 
 }

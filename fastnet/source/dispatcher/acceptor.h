@@ -5,8 +5,6 @@
 #include "socket_type.h"
 #include "socket_handle_t.h"
 #include "include\async_callback.h"
-
-#include "boost/asio/basic_socket_acceptor.hpp"
 namespace network
 {
 	class socket_acceptor : public std::enable_shared_from_this<socket_acceptor>

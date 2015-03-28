@@ -61,8 +61,4 @@ namespace service
 		HANDLE handle_;
 	};
 }
-
-
-
-
 #endif 

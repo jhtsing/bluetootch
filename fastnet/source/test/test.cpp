@@ -1,31 +1,26 @@
 // test.cpp : Defines the entry point for the console application.
 //
 #include "stdafx.h"
-#include "include\iocp_impl.h"
-
-void handler(const std::error_code& ec, std::uint32_t size)
+#include <windows.h>
+#include "task_service.h"
+void handler(int i)
 {
-	if (ec)
-	{
-		printf("TID %d failed handler max size!\n" , GetCurrentThreadId());
-	}
-	else
-	{
-		printf("TID %d OK handler max size!\n", GetCurrentThreadId());
-	}
+	printf("handler %d\n", i);
+	Sleep(10);
 }
 int _tmain(int argc, _TCHAR* argv[])
 {
 	printf("Main TID %d!\n", GetCurrentThreadId()); 
-	iocp_impl impl_(1);
 
-	impl_.post(handler);
-	impl_.post(handler);
-	impl_.post(handler);
+	task_service t;
+	t.start_thread(1);
 
-
+	t.post(std::bind(handler, 1) ,1);
+	t.post(std::bind(handler, 2) ,2);
+	t.post(std::bind(handler, 3),3);
 
 	getchar();
+	t.terminate_thread();
 	return 0;
 }
 

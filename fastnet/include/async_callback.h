@@ -40,5 +40,4 @@ namespace service
 		return ptr;
 	} 
 }
-
 #endif

@@ -103,6 +103,7 @@
     <ClInclude Include="socket_handle_t.h" />
     <ClInclude Include="socket_init.h" />
     <ClInclude Include="socket_type.h" />
+    <ClInclude Include="task_service.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

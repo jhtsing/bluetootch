@@ -59,6 +59,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib />
     <Lib>
       <OutputFile>$(SolutionDir)..\output\debug\$(TargetName)$(TargetExt)</OutputFile>
     </Lib>
@@ -88,20 +89,22 @@
   <ItemGroup>
     <ClCompile Include="acceptor.cc" />
     <ClCompile Include="iocp_impl.cc" />
+    <ClCompile Include="socket_channel.cc" />
     <ClCompile Include="socket_function.cc" />
     <ClCompile Include="socket_handle_t.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\acceptor.h" />
     <ClInclude Include="..\..\include\async_callback.h" />
+    <ClInclude Include="..\..\include\channel.h" />
     <ClInclude Include="..\..\include\iocp.h" />
     <ClInclude Include="..\..\include\iocp_impl.h" />
+    <ClInclude Include="..\..\include\ip_address.h" />
+    <ClInclude Include="..\..\include\memory_buffer.h" />
+    <ClInclude Include="..\..\include\message.h" />
     <ClInclude Include="..\..\include\nocopyable.h" />
-    <ClInclude Include="acceptor.h" />
-    <ClInclude Include="ip_address.h" />
-    <ClInclude Include="memory_buffer.h" />
-    <ClInclude Include="socket_function.h" />
-    <ClInclude Include="socket_handle_t.h" />
-    <ClInclude Include="socket_init.h" />
+    <ClInclude Include="..\..\include\socket_handle_t.h" />
+    <ClInclude Include="..\..\include\socket_init.h" />
     <ClInclude Include="socket_type.h" />
     <ClInclude Include="task_service.h" />
   </ItemGroup>

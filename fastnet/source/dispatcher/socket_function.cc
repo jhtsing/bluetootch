@@ -1,4 +1,4 @@
-#include "socket_function.h"
+#include "include\socket_function.h"
 #include <mutex> 
 #include <memory>
 namespace network
@@ -13,7 +13,7 @@ namespace network
 		static GUID guidDisconnectEx = WSAID_DISCONNECTEX;
 		static GUID guidWSARecvMsg = WSAID_WSARECVMSG;
 
-		SOCKET sck = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+		SOCKET sck = ::WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, 0, WSA_FLAG_OVERLAPPED);
 
 		get_extension_function(sck, guidTransmitFile, &TransmitFile);
 		get_extension_function(sck, guidAcceptEx, &AcceptEx);

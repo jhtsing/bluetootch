@@ -1,4 +1,4 @@
-#include "socket_handle_t.h"
+#include "include\socket_handle_t.h"
 
 namespace network
 {
@@ -6,12 +6,13 @@ namespace network
 	iocp_service_(iocp_service),
 	sock_(INVALID_SOCKET)
 	{
+		open(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	}
 	socket_handle_t::socket_handle_t(service::iocp_impl& iocp_service, socket_native_type sock) :
 	iocp_service_(iocp_service),
 	sock_(sock)
 	{
-
+		
 	}
 	socket_handle_t::socket_handle_t(const socket_handle_t &rhs):
 	iocp_service_(rhs.iocp_service_),
@@ -58,14 +59,14 @@ namespace network
 		int bret = ::shutdown(sock_, shut); 
 		assert(bret == SOCKET_ERROR);
 	}
-	bool socket_handle_t::connect(int family, const ip_address& addr, std::uint16_t port)
+	bool socket_handle_t::connect(const ip_address& addr, std::uint16_t port)
 	{
-		if (!is_open())
+		if (!open(AF_INET, SOCK_STREAM, IPPROTO_TCP))
 		{
 			return false;
 		}
 		SOCKADDR_IN server_addr = { 0 };
-		server_addr.sin_family = family;
+		server_addr.sin_family = AF_INET;
 		server_addr.sin_addr.s_addr = ::htonl(addr.address());
 		server_addr.sin_port = ::htons(port);
 		if (SOCKET_ERROR != ::connect(sock_, reinterpret_cast<SOCKADDR *>(&server_addr), sizeof(SOCKADDR_IN)))
@@ -81,7 +82,6 @@ namespace network
 			return;
 		}
 		shutdown(shut);
-
 		if (reuse_socket)
 		{
 			reuse_addr reuse(true);
@@ -146,7 +146,6 @@ namespace network
 	{
 		if (!is_open())
 		{
-			printf("don't open!\n");
 			return false;
 		}
 		sockaddr_in localAddr = { 0 };
@@ -187,6 +186,46 @@ namespace network
 	{
 		handler(ec);
 	}
+	size_t socket_handle_t::read(mutable_buffer_t &buffer, DWORD flag)
+	{
+		if (!is_open())
+		{
+			return 0;
+		}
+		WSABUF wsabuf = { 0 };
+		wsabuf.buf = buffer.data();
+		wsabuf.len = buffer.size();
+		if (wsabuf.len == 0)
+		{
+			return 0;
+		}
+		DWORD dwSize = 0;
+		if (0 != ::WSARecv(sock_, &wsabuf, 1, &dwSize, &flag, 0, 0))
+		{
+			return 0;
+		}
+		return dwSize; 
+	}
+	size_t socket_handle_t::write(const const_buffer_t &buffer, DWORD flag)
+	{
+		if (!is_open())
+		{
+			return 0;
+		}
+		WSABUF wsabuf = { 0 };
+		wsabuf.buf = const_cast<char *>(buffer.data());
+		wsabuf.len = buffer.size();
+		if (wsabuf.len == 0)
+		{
+			return 0;
+		}
+		DWORD dwSize = 0;
+		if (0 != ::WSASend(sock_, &wsabuf, 1, &dwSize, flag, 0, 0))
+		{
+			return 0;
+		}
+		return dwSize; 
+	}
 	bool socket_handle_t::async_disconnect(bool is_reuse, disconnect_handler_type handler)
 	{
 		if (!is_open())
@@ -215,6 +254,5 @@ namespace network
 	{
 		handler(ec);
 	}
-
 }
 

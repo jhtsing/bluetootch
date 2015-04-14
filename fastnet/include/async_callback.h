@@ -5,7 +5,6 @@
 #include <Windows.h>
 #include <functional>
 #include <memory>
-
 namespace service
 {
 	struct async_callback_base_t
@@ -34,7 +33,7 @@ namespace service
 		}
 	};
 	typedef std::unique_ptr<async_callback_base_t> async_callback_base_ptr;
-	async_callback_t* make_callback_ptr(HandlerType handler)
+	inline async_callback_t* make_callback_ptr(HandlerType handler)
 	{
 		async_callback_t* ptr = new async_callback_t(handler);
 		return ptr;

@@ -12,11 +12,11 @@ namespace service
 	public:
 		iocp_impl(int max_threads);
 		~iocp_impl();
-		bool start(int thread_count);
 		void stop();
 		void post(HandlerType handler);
 		void bind(HANDLE handle);
 	private:
+		bool start(int thread_count);
 		void run();
 		iocp iocp_;
 		std::mutex threads_mutex_;

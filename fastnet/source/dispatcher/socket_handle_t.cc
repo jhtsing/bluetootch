@@ -148,20 +148,19 @@ namespace network
 		{
 			return false;
 		}
-		sockaddr_in localAddr = { 0 };
-		localAddr.sin_family = AF_INET;
-
+		sockaddr_in local_addr = { 0 };
+		local_addr.sin_family = AF_INET;
 		// 很变态，需要先bind
-		int ret = ::bind(sock_, reinterpret_cast<const sockaddr *>(&localAddr), sizeof(localAddr));
+		int ret = ::bind(sock_, reinterpret_cast<const sockaddr *>(&local_addr), sizeof(local_addr));
 		if (ret != 0)
 		{
 			printf("bind failed!\n");
 			return false;
 		}
-		sockaddr_in remoteAddr = { 0 };
-		remoteAddr.sin_family = AF_INET;
-		remoteAddr.sin_port = ::htons(addr.port_);
-		remoteAddr.sin_addr.s_addr = ::htonl(addr.addr_.address());
+		sockaddr_in remote_addr = { 0 };
+		remote_addr.sin_family = AF_INET;
+		remote_addr.sin_port = ::htons(addr.port_);
+		remote_addr.sin_addr.s_addr = ::htonl(addr.addr_.address());
 
 		service::async_callback_base_ptr async_result
 			(service::make_callback_ptr(std::bind(&socket_handle_t::handle_connect ,
@@ -172,7 +171,7 @@ namespace network
 
 		if (!socket_function::singleton().ConnectEx(
 			sock_,
-			reinterpret_cast<SOCKADDR *>(&remoteAddr),
+			reinterpret_cast<SOCKADDR *>(&remote_addr),
 			sizeof(SOCKADDR), 0, 0, 0, async_result.get())
 			&& ::WSAGetLastError() != WSA_IO_PENDING)
 		{

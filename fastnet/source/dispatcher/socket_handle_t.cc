@@ -6,7 +6,7 @@ namespace network
 	iocp_service_(iocp_service),
 	sock_(INVALID_SOCKET)
 	{
-		open(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+		//open(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	}
 	socket_handle_t::socket_handle_t(service::iocp_impl& iocp_service, socket_native_type sock) :
 	iocp_service_(iocp_service),
@@ -69,8 +69,10 @@ namespace network
 		server_addr.sin_family = AF_INET;
 		server_addr.sin_addr.s_addr = ::htonl(addr.address());
 		server_addr.sin_port = ::htons(port);
-		if (SOCKET_ERROR != ::connect(sock_, reinterpret_cast<SOCKADDR *>(&server_addr), sizeof(SOCKADDR_IN)))
+		if (SOCKET_ERROR == ::connect(sock_, reinterpret_cast<SOCKADDR *>(&server_addr), sizeof(SOCKADDR_IN)))
 		{
+			DWORD error = GetLastError();
+			printf("connect failed error_code %d!\n", error);
 			return false;
 		}
 		return true;

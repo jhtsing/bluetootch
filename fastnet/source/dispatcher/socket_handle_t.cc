@@ -6,7 +6,7 @@ namespace network
 	iocp_service_(iocp_service),
 	sock_(INVALID_SOCKET)
 	{
-		//open(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+		open(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	}
 	socket_handle_t::socket_handle_t(service::iocp_impl& iocp_service, socket_native_type sock) :
 	iocp_service_(iocp_service),
@@ -57,11 +57,12 @@ namespace network
 			return;
 		}
 		int bret = ::shutdown(sock_, shut); 
+		DWORD error_code = WSAGetLastError();
 		assert(bret == SOCKET_ERROR);
 	}
 	bool socket_handle_t::connect(const ip_address& addr, std::uint16_t port)
 	{
-		if (!open(AF_INET, SOCK_STREAM, IPPROTO_TCP))
+		if (!is_open())
 		{
 			return false;
 		}
@@ -103,7 +104,8 @@ namespace network
 		DWORD dwFlag = 0;
 		DWORD dwSize = 0; 
 		int bret = ::WSARecv(sock_, &wsabuf, 1, &dwSize, &dwFlag, async_result.get(), NULL);
-		if (bret != 0 && WSAGetLastError() != WSA_IO_PENDING)
+		DWORD code = WSAGetLastError();
+		if (bret != 0 && code != WSA_IO_PENDING)
 		{
 			return false;
 		}
@@ -117,11 +119,12 @@ namespace network
 		}
 		return true;
 	}
-	bool socket_handle_t::async_write(const const_buffer_t &buf, write_handler_type handler)
+	void socket_handle_t::async_write(const const_buffer_t &buf, write_handler_type handler)
 	{
 		if (!is_open())
 		{
-			return false;
+			handler(std::error_code(), 0);
+			return;
 		}
 		WSABUF wsabuf = { 0 };
 		wsabuf.buf = const_cast<char *>(buf.data());
@@ -130,9 +133,10 @@ namespace network
 		DWORD dwsize = 0;
 		service::async_callback_base_ptr async_result(service::make_callback_ptr(handler));
 		int ret = ::WSASend(sock_, &wsabuf, 1, &dwsize, dwflag, async_result.get(), NULL);
-		if ((0 != ret) && WSAGetLastError() == WSA_IO_PENDING)
+		if ((0 != ret) && WSAGetLastError() != WSA_IO_PENDING)
 		{
-			return false; 
+			handler(std::error_code(), 0);
+			return;
 		}
 		else if (0==ret)
 		{
@@ -142,7 +146,6 @@ namespace network
 		{
 			async_result.release();
 		}
-		return true;
 	}
 	bool socket_handle_t::async_connect(const end_point& addr, connect_handler_type handler)
 	{

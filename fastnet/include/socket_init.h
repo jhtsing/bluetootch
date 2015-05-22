@@ -1,7 +1,6 @@
 #ifndef __SOCKET_INIT_H__
 #define __SOCKET_INIT_H__
 #include <windows.h>
-#include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")
 namespace network
 {

@@ -69,7 +69,7 @@ namespace network
 		size_t write(const const_buffer_t &buffer, DWORD flag);
 		//async  
 		bool async_read(mutable_buffer_t &buffer, read_handler_type handler);
-		bool async_write(const const_buffer_t &buf, write_handler_type handler);
+		void async_write(const const_buffer_t &buf, write_handler_type handler);
 		bool async_disconnect(bool is_use, disconnect_handler_type handler);
 		bool async_connect(const end_point& addr, connect_handler_type handler);
 	private:

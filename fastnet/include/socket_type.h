@@ -3,11 +3,9 @@
 
 #include <cstdint>
 #include <string>
-#include <Windows.h>
 #include <WinSock2.h>
+#include <Windows.h>
 #include <MSWSock.h>
-
-
 // Link with ws2_32.lib
 
 namespace network

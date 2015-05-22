@@ -7,7 +7,8 @@
 #include "include\async_callback.h"
 namespace network
 {
-	class socket_acceptor : public std::enable_shared_from_this<socket_acceptor>
+	class socket_acceptor : 
+		public std::enable_shared_from_this<socket_acceptor>
 {
 public:
 	typedef std::function<void(socket_handle_ptr ,std::error_code)> accept_handler_type;
@@ -78,7 +79,6 @@ public:
 
 		handler_(remote_sock_, error);
 	} 
-	
 	socket_handle_ptr remote_sock_;
 	socket_native_type accept_socket_;
 	char buffer_[MAX_SCOKADDR_BUFFER * 2];

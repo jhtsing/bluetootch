@@ -58,7 +58,7 @@ namespace network
 		}
 		int bret = ::shutdown(sock_, shut); 
 		DWORD error_code = WSAGetLastError();
-		assert(bret == SOCKET_ERROR);
+		//assert(bret == SOCKET_ERROR);
 	}
 	bool socket_handle_t::connect(const ip_address& addr, std::uint16_t port)
 	{
@@ -91,11 +91,12 @@ namespace network
 			set_option(reuse);
 		}
 	}
-	bool socket_handle_t::async_read(mutable_buffer_t &buffer, read_handler_type handler)
+	void socket_handle_t::async_read(mutable_buffer_t &buffer, read_handler_type handler)
 	{
 		if (!is_open())
 		{
-			return false;
+			handler(std::error_code(), 0);
+			return;
 		}
 		WSABUF wsabuf = { 0 };
 		wsabuf.buf = buffer.data();
@@ -107,7 +108,8 @@ namespace network
 		DWORD code = WSAGetLastError();
 		if (bret != 0 && code != WSA_IO_PENDING)
 		{
-			return false;
+			handler(std::error_code(), 0);
+			return ;
 		}
 		else if (bret ==0)
 		{
@@ -117,7 +119,6 @@ namespace network
 		{
 			async_result.release();
 		}
-		return true;
 	}
 	void socket_handle_t::async_write(const const_buffer_t &buf, write_handler_type handler)
 	{
@@ -166,14 +167,12 @@ namespace network
 		remote_addr.sin_family = AF_INET;
 		remote_addr.sin_port = ::htons(addr.port_);
 		remote_addr.sin_addr.s_addr = ::htonl(addr.addr_.address());
-
 		service::async_callback_base_ptr async_result
 			(service::make_callback_ptr(std::bind(&socket_handle_t::handle_connect ,
 			shared_from_this(),
 			handler,
 			std::placeholders::_1, 
 			std::placeholders::_2)));
-
 		if (!socket_function::singleton().ConnectEx(
 			sock_,
 			reinterpret_cast<SOCKADDR *>(&remote_addr),

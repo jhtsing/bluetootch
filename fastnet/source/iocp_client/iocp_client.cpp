@@ -6,7 +6,7 @@
 #include "include\socket_init.h"
 #include <memory>
 #include <iostream>
-const std::string send_buf = "test client";
+const std::string send_buf = "test iocp network!";
 network::socket_init<2,0> k_socket_init_;
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -22,13 +22,17 @@ int _tmain(int argc, _TCHAR* argv[])
 	std::cout << "connect ok" << std::endl; 
 	getchar();
 	getchar();
-	bret = cli_->send(send_buf.c_str(), send_buf.length());
-	if (!bret)
+	for (int i = 0; i < 100000; i++)
 	{
-		std::cout << "send ok" << std::endl;
-		return 0;
+		Sleep(10);
+		bret = cli_->send(send_buf.c_str(), send_buf.length());
+		if (!bret)
+		{
+			std::cout << "send ok" << std::endl;
+			return 0;
+		}
 	}
-	std::cout << "send ok" << std::endl; 
+	std::cout << "send finish" << std::endl;
 	getchar();
 	cli_->close();
 	return 0;

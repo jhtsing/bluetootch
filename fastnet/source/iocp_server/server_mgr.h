@@ -14,8 +14,7 @@ public:
 	bool start();
 	void stop();
 private:
-	void async_read(socket_handle_ptr ptr);
-	void handle_read(socket_handle_ptr ptr, std::error_code ec, std::uint32_t size);
+
 	void handle_accept(socket_handle_ptr ptr, std::error_code ec);
 	service::iocp_impl io_service_;
 	std::vector<char> buf_; 

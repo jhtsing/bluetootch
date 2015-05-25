@@ -88,12 +88,10 @@ namespace network
 		{
 			return;
 		}
-		std::vector<char> buffer(MAX_SCOKADDR_BUFFER * 2);
-		memset(&buffer[0], 0, buffer.size());
+		memset(&addr_buffer_[0], 0, sizeof(addr_buffer_));
 		service::async_callback_base_ptr async_result_ptr(service::make_callback_ptr(
 			std::bind(&socket_acceptor::handle_accept, 
 			shared_from_this(),
-			buffer,
 			remote_sock_ptr, 
 			handler, 
 			std::placeholders::_1,
@@ -104,7 +102,7 @@ namespace network
 		BOOL bret = socket_function::singleton().AcceptEx(
 			sock_,
 			remote_sock_ptr->native_handle(),
-			&buffer[0],
+			&addr_buffer_[0],
 			0,
 			MAX_SCOKADDR_BUFFER,
 			MAX_SCOKADDR_BUFFER,
@@ -118,7 +116,6 @@ namespace network
 		async_result_ptr.release();
 	}
 	void socket_acceptor::handle_accept(
-		std::vector<char> buffer,
 		socket_handle_ptr remote_sock,
 		accept_handler_type handler,
 		std::error_code ec, 

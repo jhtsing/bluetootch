@@ -2,9 +2,12 @@
 //
 
 #include "stdafx.h"
+#include <set>
+#include <algorithm>
 #include "server_mgr.h"
 #include "include\socket_init.h"
 network::socket_init<2, 0> sock_init_;
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	std::shared_ptr<server_mgr> mgr(new server_mgr());

@@ -46,7 +46,6 @@ private:
 	bool listen(int max);
 	bool start_accept();
 	void handle_accept(
-		std::vector<char> buffer,
 		socket_handle_ptr remote_sock,
 		accept_handler_type handler,
 		std::error_code ec,
@@ -54,6 +53,7 @@ private:
 		);
 	end_point addr_;
 	socket_native_type sock_;
+	char addr_buffer_[MAX_SCOKADDR_BUFFER * 2];
 	service::iocp_impl& io_service_;
 }; 
 

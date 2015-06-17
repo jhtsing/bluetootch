@@ -7,10 +7,29 @@ io_service_(1)
 }
 pipe_client::~pipe_client()
 {
+	close();
+}
+void pipe_client::close()
+{
+	if (chl_)
+	{
+		chl_->close();
+	}
+}
+bool pipe_client::init()
+{
+	if (!chl_)
+	{
+		chl_.reset(new pipe_channel(io_service_));
+	}
+	if (!chl_)
+	{
+		return false;
+	}
+	return true;
 }
 bool pipe_client::connect(const std::string& name)
 {
-	chl_.reset(new pipe_channel(io_service_));
 	if (!chl_)
 	{
 		return false;
@@ -24,7 +43,6 @@ bool pipe_client::connect(const std::string& name)
 }
 bool pipe_client::send(const char* buf, int size)
 {
-
 	pipe_message msg(1, buf, size);
 	if (chl_)
 	{

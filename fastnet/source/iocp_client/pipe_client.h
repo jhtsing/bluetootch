@@ -13,6 +13,7 @@ public:
 	bool init();
 	bool connect(const std::string& name);
 	bool send(const char* buf ,int size);
+	void close();
 private:
 	void handle_write(std::error_code ec, size_t size);
 	p_channel::ptr chl_;

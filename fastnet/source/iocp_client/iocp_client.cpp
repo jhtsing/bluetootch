@@ -3,17 +3,20 @@
 
 #include "stdafx.h"
 #include "client.h"
+#include "pipe_client.h"
 #include "include\socket_init.h"
 #include <memory>
 #include <iostream>
 const std::string send_buf = "test iocp network!";
 network::socket_init<2,0> k_socket_init_;
 
+const std::string k_pipe_name = "\\\\.\\pipe\\my_namedpipe"; 
+
 int _tmain(int argc, _TCHAR* argv[])
 {
-	std::shared_ptr<clientmgr> cli_(new clientmgr());
+	std::shared_ptr<pipe_client> cli_(new pipe_client());
 	bool bret = cli_->init();
-	bret = cli_->connect();
+	bret = cli_->connect(k_pipe_name);
 	if (!bret)
 	{
 		std::cout << "connect failed" << std::endl;

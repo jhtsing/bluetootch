@@ -89,6 +89,7 @@
   <ItemGroup>
     <ClCompile Include="acceptor.cc" />
     <ClCompile Include="iocp_impl.cc" />
+    <ClCompile Include="pipe_channel.cc" />
     <ClCompile Include="socket_channel.cc" />
     <ClCompile Include="socket_function.cc" />
     <ClCompile Include="socket_handle_t.cc" />
@@ -105,6 +106,9 @@
     <ClInclude Include="..\..\include\nocopyable.h" />
     <ClInclude Include="..\..\include\socket_handle_t.h" />
     <ClInclude Include="..\..\include\socket_init.h" />
+    <ClInclude Include="channel.h" />
+    <ClInclude Include="pipe_channel.h" />
+    <ClInclude Include="pipe_message.h" />
     <ClInclude Include="socket_type.h" />
     <ClInclude Include="task_service.h" />
   </ItemGroup>

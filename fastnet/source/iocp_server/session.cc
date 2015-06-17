@@ -45,7 +45,6 @@ void session::handle_read(std::error_code ec, std::uint32_t size)
 	}
 	else
 	{
-		
 		std::cout << "hand read ok size \t" << size << std::endl;
 		char sz_buf[101] = { 0 };
 		memcpy(sz_buf, &buf_[0], size);

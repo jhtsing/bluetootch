@@ -11,6 +11,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dispatcher", "..\source\dispatcher\dispatcher.vcxproj", "{FB108292-B007-4868-8954-F5B51DB75CCB}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iocp_server", "..\source\iocp_server\iocp_server.vcxproj", "{D088B8FE-D2B6-4746-B717-F0E10C81A15B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FB108292-B007-4868-8954-F5B51DB75CCB} = {FB108292-B007-4868-8954-F5B51DB75CCB}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

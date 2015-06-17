@@ -15,7 +15,7 @@ public:
 	void stop();
 private:
 	void handle_accept(p_channel::ptr chl , std::error_code ec);
-	std::vector<char> buf_;
+	std::mutex mutex_;
 	service::iocp_impl io_service_;
 	std::shared_ptr<p_acceptor> acceptor_;
 };

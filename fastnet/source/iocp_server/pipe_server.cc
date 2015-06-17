@@ -12,11 +12,16 @@ io_service_(1)
 }
 pipe_mgr::~pipe_mgr()
 {
+	uninit();
 }
-
 bool pipe_mgr::init()
 {
-	acceptor_.reset(new pipe_acceptor(io_service_));
+	std::unique_lock<std::mutex> lock(mutex_);
+	if (!acceptor_)
+	{
+		acceptor_.reset(new pipe_acceptor(io_service_));
+		return false;
+	}
 	if (!acceptor_)
 	{
 		return false;
@@ -30,6 +35,7 @@ void pipe_mgr::uninit()
 }
 bool pipe_mgr::start()
 {
+	std::unique_lock<std::mutex> lock(mutex_);
 	if (acceptor_)
 	{
 		std::cout << "waiting new accept ......." << std::endl;
@@ -46,7 +52,6 @@ bool pipe_mgr::start()
 	}
 	return true;
 }
-
 void pipe_mgr::handle_accept(p_channel::ptr chl, std::error_code ec)
 {
 	if (ec)
@@ -64,6 +69,7 @@ void pipe_mgr::handle_accept(p_channel::ptr chl, std::error_code ec)
 }
 void pipe_mgr::stop()
 {
+	std::unique_lock<std::mutex> lock(mutex_);
 	if (acceptor_)
 	{
 		acceptor_->close();

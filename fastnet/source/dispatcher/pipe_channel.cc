@@ -53,7 +53,7 @@ namespace named_pipe
 	}
 	void pipe_channel::async_read(read_handler_type msg_handler)
 	{
-		if (handle_ != INVALID_HANDLE_VALUE)
+		if (handle_ == INVALID_HANDLE_VALUE)
 		{
 			msg_handler(std::shared_ptr<pipe_message>(), std::error_code());
 			return;
@@ -135,7 +135,7 @@ namespace named_pipe
 			handler(ec, 0);
 			return;
 		}
-		handler(ec, 0);
+		handler(ec, size);
 	}
 	void pipe_channel::be_server(HANDLE handle)
 	{

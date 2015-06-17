@@ -94,8 +94,6 @@ namespace network
 	{
 	private:
 		::linger value_;
-
-
 	public:
 		integer_t()
 		{

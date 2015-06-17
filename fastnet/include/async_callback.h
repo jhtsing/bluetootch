@@ -25,7 +25,7 @@ namespace service
 	{
 		HandlerType handler_;
 		async_callback_t(HandlerType handler) :
-			handler_(handler)
+		handler_(handler)
 		{}
 		virtual void invoke(const std::error_code &error, std::uint32_t size)
 		{

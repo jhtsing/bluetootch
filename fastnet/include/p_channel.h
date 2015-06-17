@@ -1,5 +1,5 @@
-#ifndef __CHANNEL_H__
-#define __CHANNEL_H__
+#ifndef __P_CHANNEL_H__
+#define __P_CHANNEL_H__
 #include <string>
 #include <functional>
 #include <Windows.h> 

@@ -89,6 +89,7 @@
   <ItemGroup>
     <ClCompile Include="acceptor.cc" />
     <ClCompile Include="iocp_impl.cc" />
+    <ClCompile Include="pipe_acceptor.cc" />
     <ClCompile Include="pipe_channel.cc" />
     <ClCompile Include="socket_channel.cc" />
     <ClCompile Include="socket_function.cc" />
@@ -104,11 +105,13 @@
     <ClInclude Include="..\..\include\memory_buffer.h" />
     <ClInclude Include="..\..\include\message.h" />
     <ClInclude Include="..\..\include\nocopyable.h" />
+    <ClInclude Include="..\..\include\pipe_acceptor.h" />
+    <ClInclude Include="..\..\include\pipe_channel.h" />
+    <ClInclude Include="..\..\include\pipe_message.h" />
+    <ClInclude Include="..\..\include\p_channel.h" />
     <ClInclude Include="..\..\include\socket_handle_t.h" />
     <ClInclude Include="..\..\include\socket_init.h" />
-    <ClInclude Include="channel.h" />
-    <ClInclude Include="pipe_channel.h" />
-    <ClInclude Include="pipe_message.h" />
+    <ClInclude Include="lowest_sa.h" />
     <ClInclude Include="socket_type.h" />
     <ClInclude Include="task_service.h" />
   </ItemGroup>

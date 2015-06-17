@@ -83,6 +83,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="pipe_server.h" />
+    <ClInclude Include="pipe_session.h" />
     <ClInclude Include="server_mgr.h" />
     <ClInclude Include="session.h" />
     <ClInclude Include="stdafx.h" />
@@ -90,6 +92,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="iocp_server.cpp" />
+    <ClCompile Include="pipe_server.cc" />
+    <ClCompile Include="pipe_session.cc" />
     <ClCompile Include="server_mgr.cc" />
     <ClCompile Include="session.cc" />
     <ClCompile Include="stdafx.cpp">

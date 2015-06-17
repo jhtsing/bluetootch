@@ -11,6 +11,7 @@ pipe_client::~pipe_client()
 }
 void pipe_client::close()
 {
+	std::unique_lock<std::mutex> lock(mutex_);
 	if (chl_)
 	{
 		chl_->close();
@@ -18,6 +19,7 @@ void pipe_client::close()
 }
 bool pipe_client::init()
 {
+	std::unique_lock<std::mutex> lock(mutex_);
 	if (!chl_)
 	{
 		chl_.reset(new pipe_channel(io_service_));
@@ -30,6 +32,7 @@ bool pipe_client::init()
 }
 bool pipe_client::connect(const std::string& name)
 {
+	std::unique_lock<std::mutex> lock(mutex_); 
 	if (!chl_)
 	{
 		return false;
@@ -43,9 +46,10 @@ bool pipe_client::connect(const std::string& name)
 }
 bool pipe_client::send(const char* buf, int size)
 {
-	pipe_message msg(1, buf, size);
+	std::unique_lock<std::mutex> lock(mutex_); 
 	if (chl_)
 	{
+		pipe_message msg(1, buf, size);
 		chl_->async_write(msg, std::bind(&pipe_client::handle_write,
 			this,
 			std::placeholders::_1,
@@ -63,6 +67,7 @@ void pipe_client::handle_write(std::error_code ec, size_t size)
 	if (ec)
 	{
 		printf("write failed!\n");
+		close();
 		return;
 	}
 	else

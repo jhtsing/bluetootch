@@ -17,6 +17,7 @@ public:
 private:
 	void handle_write(std::error_code ec, size_t size);
 	p_channel::ptr chl_;
+	std::mutex mutex_;
 	service::iocp_impl io_service_; 
 };
 #endif 

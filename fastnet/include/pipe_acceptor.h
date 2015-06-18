@@ -1,7 +1,10 @@
 #ifndef __PIPE_ACCEPTOR_H__
 #define __PIPE_ACCEPTOR_H__ 
+#include <set>
 #include <memory>
 #include <string>
+#include <mutex>
+#include <atomic>
 #include "p_channel.h"
 #include "include\iocp_impl.h" 
 
@@ -21,11 +24,15 @@ namespace named_pipe
 		HANDLE create_pipe(std::error_code& ec);
 		void handle_accept(p_channel::ptr chl, 
 			p_accept_handler_type handler,
+			int session,
 			const std::error_code& ec , 
 			std::uint32_t size);
 		void do_accept(p_accept_handler_type handler);
 		service::iocp_impl& io_service_;
 		size_t buffer_size_; 
+		std::atomic_int session_; 
+		std::mutex pendings_mutex_;
+		std::set<p_channel::ptr> pendings_; 
 		std::string pipe_name_;
 	};
 }

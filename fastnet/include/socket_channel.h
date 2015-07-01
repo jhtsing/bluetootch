@@ -25,17 +25,15 @@ public:
 		close();
 	}
 	virtual bool connect(const end_point& remote_point);
-
 	virtual void async_connect(const end_point& remote_point, connect_handler_type handler) ;
-	virtual void async_write(const char* buf, std::uint32_t size, write_handler_type handler);
+	virtual void async_write(const message msg, write_handler_type handler);
 	virtual void async_read(read_handler_type handler); 
 	virtual void close();
 private:
-	void handle_read_header(read_handler_type handler, message msg, std::error_code ec, std::uint32_t size);
-	void handle_read_body(read_handler_type handler, message msg, std::error_code ec, std::uint32_t size);
+	void handle_read_header(read_handler_type handler, std::shared_ptr<message> msg, std::error_code ec, std::uint32_t size);
+	void handle_read_body(read_handler_type handler, std::shared_ptr<message> msg, std::error_code ec, std::uint32_t size);
 	socket_handle_ptr sock_;
 	service::iocp_impl& io_service_;
 }; 
 }
-
 #endif 

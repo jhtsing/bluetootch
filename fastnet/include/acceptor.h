@@ -56,7 +56,6 @@ private:
 	char addr_buffer_[MAX_SCOKADDR_BUFFER * 2];
 	service::iocp_impl& io_service_;
 }; 
-
 class accept_handler
 {
 public:
@@ -76,7 +75,6 @@ public:
 		// ¸´ÖÆListen socketÊôÐÔ
 		update_accept_context context(accept_socket_);
 		remote_sock_->set_option(context);
-
 		handler_(remote_sock_, error);
 	} 
 	socket_handle_ptr remote_sock_;
@@ -84,6 +82,5 @@ public:
 	char buffer_[MAX_SCOKADDR_BUFFER * 2];
 	socket_acceptor::accept_handler_type handler_;
 }; 
-
 }
 #endif 

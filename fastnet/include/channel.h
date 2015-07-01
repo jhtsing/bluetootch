@@ -17,7 +17,7 @@ public:
 	virtual ~channel(){}
 	virtual bool connect(const end_point& remote_point)=0;
 	virtual void async_connect(const end_point& remote_point, connect_handler_type handler)=0;
-	virtual void async_write(const char* buf, std::uint32_t size, write_handler_type handler)=0;
+	virtual void async_write(const message msg, write_handler_type handler) = 0;
 	virtual void async_read(read_handler_type handler)=0;
 	virtual void close()=0;
 }; 

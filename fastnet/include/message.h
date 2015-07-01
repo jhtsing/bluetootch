@@ -25,6 +25,11 @@ public:
 	message(const char* buf ,std::uint32_t len):
 	data_(KMSGHEADER_LENGTH+len)
 	{
+		msgheader* _header = reinterpret_cast<msgheader *>(buffer());
+		assert(_header != nullptr);
+		_header->msg_len = len;
+		_header->msg_id = 0; 
+		memcpy(&data_[KMSGHEADER_LENGTH], buf, len);
 	}
 	char *buffer()
 	{
@@ -44,7 +49,7 @@ public:
 	}
 	char *data()
 	{
-		return (char *)(&data_[0]);
+		return (char *)(&data_[KMSGHEADER_LENGTH]);
 	}
 	const char* data() const 
 	{

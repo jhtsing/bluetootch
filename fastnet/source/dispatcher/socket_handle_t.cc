@@ -134,9 +134,10 @@ namespace network
 		DWORD dwsize = 0;
 		service::async_callback_base_ptr async_result(service::make_callback_ptr(handler));
 		int ret = ::WSASend(sock_, &wsabuf, 1, &dwsize, dwflag, async_result.get(), NULL);
-		if ((0 != ret) && WSAGetLastError() != WSA_IO_PENDING)
+		int erroc = WSAGetLastError();
+		if ((0 != ret) && erroc != WSA_IO_PENDING)
 		{
-			handler(std::error_code(), 0);
+			handler(std::error_code(erroc , std::generic_category()), 0);
 			return;
 		}
 		else if (0==ret)

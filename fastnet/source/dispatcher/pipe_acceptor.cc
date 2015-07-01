@@ -1,5 +1,6 @@
 #include "include\pipe_acceptor.h"
 #include "lowest_sa.h"
+#include <algorithm>    // std::for_each 
 #include "include\pipe_channel.h"
 
 namespace named_pipe
@@ -8,32 +9,50 @@ namespace named_pipe
 	pipe_acceptor::pipe_acceptor(service::iocp_impl& io_service):
 	io_service_(io_service)
 	{
+		session_ = 0;
 	}
 	pipe_acceptor::~pipe_acceptor()
 	{
+		close();
 	}
 	bool pipe_acceptor::open(const std::string& pipe_name)
 	{
 		pipe_name_ = pipe_name;
+		session_++;
 		return true;
 	}
 	void pipe_acceptor::handle_accept(p_channel::ptr chl,
 		p_accept_handler_type handler,
+		int session,
 		const std::error_code& ec,
 		std::uint32_t size)
 	{
+		{
+			std::unique_lock<std::mutex> lock(pendings_mutex_);
+			pendings_.insert(chl);
+		}
 		if (ec)
 		{
 			handler(p_channel::ptr(), ec);
 			return;
 		}
-		else
+		if (session != session_)
 		{
-			handler(chl, ec);
+			return;
 		}
+		handler(chl, ec);
 	}
 	bool pipe_acceptor::close()
 	{
+		session_++;
+		{
+			std::unique_lock<std::mutex> lock(pendings_mutex_);
+			std::for_each(pendings_.begin(), pendings_.end(), [](p_channel::ptr ptr){
+				if(ptr) 
+					ptr->close();
+			});
+			pendings_.clear();
+		}
 		return true;
 	}
 	void pipe_acceptor::do_accept(p_accept_handler_type handler)
@@ -52,6 +71,7 @@ namespace named_pipe
 			shared_from_this(),
 			ptr,
 			handler,
+			session_,
 			std::placeholders::_1,
 			std::placeholders::_2))
 			);
@@ -85,6 +105,11 @@ namespace named_pipe
 			handler(ptr, std::error_code());
 			return;
 		}
+		else
+		{
+			std::unique_lock<std::mutex> lock(pendings_mutex_);
+			pendings_.insert(ptr); 
+		}
 		ptr->be_server(pipe);
 		over_lapped.release(); 
 	}
@@ -114,7 +139,4 @@ namespace named_pipe
 			shared_from_this(),
 			handler));
 	}
-
-
-
 }

@@ -33,6 +33,7 @@ namespace network
 	}
 	socket_acceptor::~socket_acceptor()
 	{
+		close();
 	}
 	bool socket_acceptor::open(int family, int type, int protocol)
 	{
@@ -81,7 +82,8 @@ namespace network
 		assert(ret != SOCKET_ERROR);
 		return (ret != SOCKET_ERROR);
 	}
-	void socket_acceptor::async_acceptor(socket_handle_ptr& remote_sock_ptr, 
+	void socket_acceptor::async_acceptor(
+		socket_handle_ptr& remote_sock_ptr, 
 		accept_handler_type handler)
 	{
 		if (!is_open())
@@ -126,5 +128,4 @@ namespace network
 		remote_sock->set_option(context);
 		handler(remote_sock, ec);
 	}
-
 }

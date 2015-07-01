@@ -102,6 +102,7 @@
     <ClInclude Include="..\..\include\iocp.h" />
     <ClInclude Include="..\..\include\iocp_impl.h" />
     <ClInclude Include="..\..\include\ip_address.h" />
+    <ClInclude Include="..\..\include\log.h" />
     <ClInclude Include="..\..\include\memory_buffer.h" />
     <ClInclude Include="..\..\include\message.h" />
     <ClInclude Include="..\..\include\nocopyable.h" />
@@ -109,6 +110,7 @@
     <ClInclude Include="..\..\include\pipe_channel.h" />
     <ClInclude Include="..\..\include\pipe_message.h" />
     <ClInclude Include="..\..\include\p_channel.h" />
+    <ClInclude Include="..\..\include\socket_channel.h" />
     <ClInclude Include="..\..\include\socket_handle_t.h" />
     <ClInclude Include="..\..\include\socket_init.h" />
     <ClInclude Include="lowest_sa.h" />

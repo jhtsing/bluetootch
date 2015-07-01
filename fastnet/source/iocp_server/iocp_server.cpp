@@ -41,7 +41,7 @@ int test_pipe_mgr()
 }
 int _tmain(int argc, _TCHAR* argv[])
 {
-	test_pipe_mgr();
+	test_net_mgr();
 	return 0;
 }
 

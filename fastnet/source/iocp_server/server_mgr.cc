@@ -55,8 +55,10 @@ void server_mgr::handle_accept(socket_handle_ptr ptr, std::error_code ec)
 	}
 	else
 	{
+		start();
 		std::cout << "recv new accept" << std::endl;
-		std::shared_ptr<session> s_(new session(ptr));
+		channel_ptr chl(new socket_channel(io_service_, ptr));
+		std::shared_ptr<session> s_(new session(chl));
 		s_->start();
 	}
 }

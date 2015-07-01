@@ -62,6 +62,7 @@ void pipe_mgr::handle_accept(p_channel::ptr chl, std::error_code ec)
 	}
 	else
 	{
+		start();
 		std::cout << "recv new accept" << std::endl;
 		std::shared_ptr<pipe_session> s_(new pipe_session(chl));
 		s_->start();
